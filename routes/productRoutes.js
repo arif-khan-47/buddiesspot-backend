@@ -7,12 +7,12 @@ const router = express.Router();
 //Admin Routes
 
 //Create new product
-router.route('/product/new').post(isAuthenticatedUser, authorizeRole("admin"), createProduct);
+router.route('admin/product/new').post(isAuthenticatedUser, authorizeRole("admin"), createProduct);
 // Update existing product & delete by id
 // router.route('/product/:id').put(updateProduct).delete(deleteProduct).get(getSingleProduct);
 
 //Update & delete product
-router.route('/product/:id').put(isAuthenticatedUser, authorizeRole("admin"), updateProduct).delete(isAuthenticatedUser, authorizeRole("admin"), deleteProduct);
+router.route('admin/product/:id').put(isAuthenticatedUser, authorizeRole("admin"), updateProduct).delete(isAuthenticatedUser, authorizeRole("admin"), deleteProduct);
 
 //update catagories detail
 // router.route('/catagory/:id').put(updateProductCategory);

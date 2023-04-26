@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, loginUser, logoutUser, forgetPassword, resetPassword, updatePassword, getUserDetails } = require('../controller/userController');
+const { registerUser, loginUser, logoutUser, forgetPassword, resetPassword, updatePassword, getUserDetails, updateProfile } = require('../controller/userController');
 const { isAuthenticatedUser } = require('../middleware/auth');
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.route('/whoami').get(isAuthenticatedUser, getUserDetails)
 //change password
 router.route('/password/update').put(isAuthenticatedUser, updatePassword)
 //edit user profile
-router.route('/editProfile').put(isAuthenticatedUser, updatePassword)
+router.route('/editProfile').put(isAuthenticatedUser, updateProfile)
 
 
 
