@@ -102,7 +102,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
     sendToken(user, 200, res);
 })
 
-// get single user
+// get logged in user detail
 exports.getUserDetails = async (req, res, next) => {
     const user = await User.findById(req.user.id)
     // if (!user) {
@@ -146,7 +146,64 @@ exports.updateProfile = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.user.id, newUserData, { new: true, runValidators: true, useFindAndModify: false });
 
     res.status(200).json({
-        sucess:true,
-        message:'Updated successfully'
+        sucess: true,
+        message: 'Updated successfully'
     })
 }
+
+//get all users
+exports.getAllUser = catchAsyncError(async (req, res, next) => {
+    const users = await User.find();
+    res.status(200).json({
+        success: true,
+        users
+    })
+})
+
+//get single user- admin
+exports.getSingleUser = catchAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+        return next(new ErrorHandler(`User isn't exist ith id ${req.params.id}`, 404))
+    }
+    res.status(200).json({
+        success: true,
+        user
+    })
+})
+
+// update user role - admin
+exports.updateUserProfile = async (req, res, next) => {
+    const newUserData = {
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone,
+        role: req.body.role
+        // avatar:
+    }
+
+    const user = await User.findByIdAndUpdate(req.params.id, newUserData, { new: true, runValidators: true, useFindAndModify: false });
+
+    res.status(200).json({
+        sucess: true,
+        message: 'Updated successfully'
+    })
+}
+
+// delete user - admin
+exports.deleteUser = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return next(new ErrorHandler(`User with id ${req.params.id} not found`, 404));
+        }
+        await User.deleteOne({_id: req.params.id})
+        res.status(200).json({
+            success: true,
+            message: 'User deleted successfully',
+        });
+    } catch (error) {
+        console.log(error);
+        return next(new ErrorHandler(`Error deleting user: ${error.message}`, 500));
+    }
+};
