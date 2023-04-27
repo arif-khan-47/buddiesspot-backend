@@ -10,13 +10,17 @@ app.use(cookieParser());
 
 
 //Import Rourtes
-const products = require("./routes/productRoutes")
+const products = require("./routes/productRoutes");
 const user = require("./routes/userRoutes");
+const order = require("./routes/orderRoutes");
 
 
 
-app.use('/api', products)
-app.use('/api', user)
+
+app.use('/api', products);
+app.use('/api', user);
+app.use('/api', order);
+
 
 
 
