@@ -38,8 +38,8 @@ router.route('/reviews').get(getProductReview).delete(isAuthenticatedUser, delet
 
 
 
-//get all catagories of product
-// router.route('/products/catagories').get(getAllCategories);
+// get all catagories of product
+router.route('/products/catagories').get(getAllCategories);
 
 
 
