@@ -2,6 +2,7 @@ const Product = require('../models/productModel');
 const ErrorHandler = require('../utils/errorhandler');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const ApiFeatures = require('../utils/apiFeatures');
+const cloudinary = require('cloudinary')
 
 
 //Admin Routes
@@ -9,6 +10,24 @@ const ApiFeatures = require('../utils/apiFeatures');
 //Create Product 
 exports.createProduct = catchAsyncError(
     async (req, res, next) => {
+        let images = [];
+        if (typeof req.body.images === 'string') {
+            images.push(req.body.images);
+        }else{
+            images=req.body.images
+        }
+
+        const imagesLink=[];
+for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i], {
+        folder:'products',
+    });
+    imagesLink.push({
+        public_id: result.public_id,
+        url: result.secure_url
+    });
+    
+}
 
         const { slug } = req.body;
 
@@ -20,6 +39,8 @@ exports.createProduct = catchAsyncError(
         if (!slugPattern.test(slug)) {
             return next(new ErrorHandler("Slug must not contain any spaces or empty", 400));
         }
+
+        req.body.images = imagesLink;
         req.body.createdBy = req.user.id;
         const product = await Product.create(req.body);
 
@@ -110,6 +131,22 @@ exports.getAllCategories = async (req, res, next) => {
         res.status(200).json({
             success: true,
             categories
+        });
+    } catch (err) {
+        next(err);
+    }
+}
+
+
+// get all product with category
+
+exports.getAllProductWithCategory = async (req, res, next) => {
+    try {
+    const { category } = req.params;
+    const products = await Product.find({ category });
+        res.status(200).json({
+            success: true,
+            products
         });
     } catch (err) {
         next(err);
