@@ -1,17 +1,17 @@
 const express = require("express");
 const app = express();
-const errorHandling = require("./middleware/error");
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload')
 var cors = require('cors')
+const errorHandling = require("./middleware/error");
 
 
-app.use(express.json())
-app.use(express.query());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(fileUpload());
+app.use(express.json());
+app.use(express.query());
 
 const corsOptions ={
     origin:'http://localhost:3000'||'https://buddiesspot.vercel.app/', 
@@ -25,6 +25,7 @@ app.use(cors(corsOptions)) // Use this after the variable declaration
 const products = require("./routes/productRoutes");
 const user = require("./routes/userRoutes");
 const order = require("./routes/orderRoutes");
+
 
 
 
