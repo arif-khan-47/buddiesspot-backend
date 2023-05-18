@@ -54,6 +54,10 @@ const productSchema = new mongoose.Schema({
     stock: {
         type: Number,
     }, 
+    type:{
+        type: String,
+        required: [true, "Please Select the product type"]
+    },
     numberOfReview:{
         type:Number,
         default: 0,
